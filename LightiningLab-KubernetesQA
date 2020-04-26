@@ -1,0 +1,59 @@
+Question: 1
+Create a Persistent Volume called log-volume. 
+
+It should make use of a storage class name manual. 
+
+It should use RWX as the access mode and have a size of 1Gi. The volume should use the hostPath /opt/volume/nginx
+Next, create a PVC called log-claim requesting a minimum of 200Mi of storage. This PVC should bind to log-volume.
+Mount this in a pod called logger at the location /var/www/nginx. This pod should use the image nginx:alpine.
+
+Answer:
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: log-volume
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/opt/volume/nginx"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: log-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 200Mi
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: logger
+spec:
+  volumes:
+    - name: task-pv-storage
+      persistentVolumeClaim:
+        claimName: log-claim
+  containers:
+    - name: task-pv-container
+      image: nginx:alpine
+      volumeMounts:
+        - mountPath: "/var/www/nginx"
+          name: task-pv-storage
+
+
+Test:
+Kubes commands
+kubectl get pv log-volume (check pv status, needs to be bound)
+k get pods (check if its running)
+When persistentVolumeclaim is deleted, you can set persistentVolumereclaimpolicy to retain, delete or recycle (only data deleted)
