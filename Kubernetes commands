@@ -26,3 +26,14 @@ Viewing Deployments
 k get Deployments
 k get replicasets (For rolling updates)
 
+#Jobs
+k create Job jobname
+k get jobs
+
+#Logs
+k logs podname
+k logs -f podname (Stream)
+
+#Metrics
+k top node (shows nodes and usage of memory and cpu)
+k top pod (shows pods usage)
