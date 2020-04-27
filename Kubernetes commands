@@ -1,0 +1,28 @@
+Kubernetes commands
+
+#Check in a specific namespace
+k describe pod time-check -ndvl1987
+
+#Check result in a specific pod in a specific name space
+k -n dvl1987 exec time-check env | grep TIME
+
+#Dry Run commands
+k run --generator=run-pod/v1 time-check --image=busybox --dry-run -o yaml >pod.yaml
+k create deployment 
+
+#Deployments
+Update Deployments
+k apply -f deploy.yaml
+k set image deployment name nginx=nginx:1.9.1 (Existing yaml file gets modified)
+
+#Rollback
+k rollout undo deployment
+
+#status
+k rollout status deployment
+k rollout history deployment
+
+Viewing Deployments
+k get Deployments
+k get replicasets (For rolling updates)
+
